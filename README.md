@@ -2,11 +2,15 @@
 
 DeepSeek Harness（`dsh`）的**花费仪表**：在 Web 界面**左侧靠上**显示一个**可缩放、可展开/缩小**的浮动窗口，实时显示 DeepSeek API 花费与余额，用**极简时钟**（仅一根时针 + 双色外圈）指示当前时段费率是「空闲」还是「繁忙」，余额低于设定阈值时窗口顶部**小红灯闪烁报警**。支持**多皮肤切换**（经典时钟 / 极简数字 / 环形仪表 / 迷你状态条）。
 
+> 💡 **本插件与 dsh-cost-gauge 的关系**：`dsh-cost-gauge-plus` 是 **dsh-cost-gauge 的独立维护版本**（由 v1.4 派生），内部标识（包名 / 插件 id / API 路径 / CSS 前缀）已全部隔离，可与原 `dsh-cost-gauge` **并存安装**、互不干扰。
+
 ## 截图
+
+以下实拍图来自 dsh-cost-gauge-plus 自身（多皮肤可在窗口齿轮菜单随时切换）：
 
 | 经典时钟（默认） | 测试1（星空皮肤，深色模式） |
 | --- | --- |
-| ![经典时钟](docs/classic.png) | ![测试1](docs/test1.png) |
+| ![dsh-cost-gauge-plus 经典时钟皮肤](docs/classic.png) | ![dsh-cost-gauge-plus 测试1 星空皮肤](docs/test1.png) |
 
 > 测试1 皮肤在深色模式下将空闲弧显示为深邃星空蓝渐变（#040a3a→#00081e），弧内星点会"亮起→变暗消失→随机换位重现"。
 
@@ -119,7 +123,7 @@ dsh-cost-gauge-plus/
 │   └── alipay-qr.jpg     # 支付宝收款码（README 赞助区引用）
 ├── lib/
 │   ├── index.js          # 宿主半身：余额查询 + 花费统计 + 峰谷判定 + /api/cost-gauge-plus/* 路由
-│   └── client.js         # 浏览器半身：方形浮动窗（指针表 + 红灯 + 拖动 + 阈值设置）
+│   └── client.js         # 浏览器半身：极简时钟 + 多皮肤浮动窗（展开/缩小、状态灯、可缩放）
 └── README.md
 ```
 
@@ -131,9 +135,9 @@ MIT
 
 ## ☕ 赞助
 
-如果这个插件帮到了你，欢迎请我喝杯咖啡 ☕
+`dsh-cost-gauge-plus` 由我独立维护（自 [dsh-cost-gauge](https://github.com/wjingshan/dsh-cost-gauge) v1.4 派生）。如果它帮到了你，欢迎请我喝杯咖啡 ☕
 
-<img src="docs/alipay-qr.jpg" alt="支付宝收款码" width="240" />
+<img src="docs/alipay-qr.jpg" alt="作者支付宝收款码（dsh-cost-gauge-plus）" width="240" />
 
 <div align="center">
 
