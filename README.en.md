@@ -55,15 +55,15 @@ To install the development version or pin a tag:
 ```powershell
 irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install.ps1 -OutFile install-dsh-cost-gauge-plus.ps1
 .\install-dsh-cost-gauge-plus.ps1 -Ref main        # development (main)
-.\install-dsh-cost-gauge-plus.ps1 -Ref v1.2.0      # pin a tag
+.\install-dsh-cost-gauge-plus.ps1 -Ref v1.3.0      # pin a tag
 ```
 
 ### Manual install
 
 ```sh
 dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#main
-dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#v1.2.0
-dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/archive/refs/tags/v1.2.0.tar.gz
+dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#v1.3.0
+dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/archive/refs/tags/v1.3.0.tar.gz
 dsh plugin --profile web add link:/path/to/dsh-cost-gauge-plus
 ```
 
