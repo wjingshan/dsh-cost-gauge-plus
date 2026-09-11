@@ -1,5 +1,7 @@
 # dsh-cost-gauge-plus
 
+中文 | [English](README.en.md)
+
 DeepSeek Harness（`dsh`）的**花费仪表**：在 Web 界面**左侧靠上**显示一个**可缩放、可展开/缩小**的浮动窗口，实时显示 DeepSeek API 花费与余额，用**极简时钟**（仅一根时针 + 双色外圈）指示当前时段费率是「空闲」还是「繁忙」，余额低于设定阈值时窗口顶部**小红灯闪烁报警**。支持**多皮肤切换**（经典时钟 / 极简数字 / 环形仪表 / 迷你状态条）。
 
 > 💡 **本插件与 dsh-cost-gauge 的关系**：`dsh-cost-gauge-plus` 是 **dsh-cost-gauge 的独立维护版本**（由 v1.4 派生），内部标识（包名 / 插件 id / API 路径 / CSS 前缀）已全部隔离，可与原 `dsh-cost-gauge` **并存安装**、互不干扰。
@@ -13,6 +15,20 @@ DeepSeek Harness（`dsh`）的**花费仪表**：在 Web 界面**左侧靠上**�
 | ![dsh-cost-gauge-plus 经典时钟皮肤](docs/classic.png) | ![dsh-cost-gauge-plus 测试1 星空皮肤](docs/test1.png) |
 
 > 测试1 皮肤在深色模式下将空闲弧显示为深邃星空蓝渐变（#040a3a→#00081e），弧内星点会"亮起→变暗消失→随机换位重现"。
+
+## 本次更新（v1.3.0，与 dsh-cost-gauge 同步）
+
+| 花费记录面板（中文） | Spend records panel (English) |
+| --- | --- |
+| <img src="docs/screenshot-records.png" width="380" alt="花费记录面板：范围/筛选/柱状图/明细"> | <img src="docs/screenshot-records-en.png" width="380" alt="Records panel: ranges, chart, detail"> |
+
+- **费用计算口径修正**：宿主改为回放会话事件日志，按「事件发生时刻的费率 × 当时的模型」逐笔计价——空闲时段按空闲价、高峰时段按高峰价后相加；修掉旧版"进入高峰后整段历史按高峰价重算（费用翻倍）"的问题；`llm/retry-started` 与相同 turn/step 的重复样本按官方投影口径替换而非累加，记录覆盖会话完整历史。
+- **新增「记录 / 归零」两个图标按钮**（标题栏内，无边框小图标 + 悬停提示）：
+  - 记录面板支持 `总时间 / 年 / 月 / 周` 筛选与翻页、**柱状图**（峰谷/模型堆叠）、明细表格；明细只列**有使用记录**的时段；范围可切 `本会话 / 全部会话`；面板可拖动、可覆盖浮窗、越界自动拉回窗口内；
+  - 归零为两步确认，把当前累计作为基线后从 ¥0.00 重新累计（不删历史）。
+- **导出 Excel 升级为真正的 `.xlsx`**（OOXML，零依赖手写 zip 写入器，Excel/WPS 直接打开无格式警告）：两个工作表（按峰谷拆分 / 按模型拆分）+ 首行导出说明；默认文件名 `<会话名称>_<起>-<止>.xlsx`；设置里可指定 Excel 默认保存位置（已设置则直接落盘不弹窗），导出后 `📂 打开` 定位文件。
+- **宿主侧记账**：每 15 秒回放会话事件日志并持久化到 `~/.dsh/cost-gauge-plus/ledger.json`（与 dsh-cost-gauge 的数据文件互相独立）。
+- **中英双语界面**：跟随 DSH 客户端语言设置，取不到时跟随系统/浏览器语言（`zh*` → 中文，其余 → English）。
 
 ## 功能
 
@@ -108,8 +124,8 @@ dsh web
 ## 数据与安全
 
 - 余额经官方 `GET /user/balance` 查询，API Key 只在宿主侧解析（credentials 接缝 / 环境变量），**绝不下发浏览器**。
-- 花费由宿主读取会话的 `tokenUsage` 投影、按官方峰谷价换算；缓存写入不单独计费（与官方口径一致）。
-- 纯 ESM、零运行时依赖：宿主不 import 任何包，浏览器半身是原生 JS（无 React）。
+- 花费由宿主**回放会话事件日志**（`assistant/message` / `assistant/attempt` 的 usage 与时间戳 + `request/header` 的模型），按事件时刻的峰谷价逐笔换算；缓存写入不单独计费（与官方口径一致）。
+- 纯 ESM、零第三方依赖：宿主只用 Node 内置模块（记账见 `lib/ledger.js`），浏览器半身是原生 JS（无 React）。
 
 ## 目录结构
 
@@ -120,11 +136,13 @@ dsh-cost-gauge-plus/
 ├── install.ps1           # 一键安装脚本（irm … | iex）
 ├── release.ps1           # 一键发布脚本（提交+升版本+推送+创建 Release）
 ├── docs/
-│   └── alipay-qr.jpg     # 支付宝收款码（README 赞助区引用）
+│   ├── alipay-qr.jpg     # 支付宝收款码（README 赞助区引用）
+│   └── classic.png / test1.png   # 皮肤截图
 ├── lib/
-│   ├── index.js          # 宿主半身：余额查询 + 花费统计 + 峰谷判定 + /api/cost-gauge-plus/* 路由
-│   └── client.js         # 浏览器半身：极简时钟 + 多皮肤浮动窗（展开/缩小、状态灯、可缩放）
-└── README.md
+│   ├── index.js          # 宿主半身：余额查询 + 日志回放记账 + 峰谷判定 + /api/cost-gauge-plus/* 路由
+│   ├── ledger.js         # 宿主：记账/持久化/每日聚合/xlsx 写出/原生选目录与定位
+│   └── client.js         # 浏览器半身：多皮肤浮动窗 + 记录面板（中英双语）
+└── README.md / README.en.md
 ```
 
 ## License
