@@ -14,6 +14,10 @@ A **cost gauge** for DeepSeek Harness (`dsh`): a **resizable, expandable/collaps
 
 > In dark mode the starry skin renders the off-peak arc as a deep star-field gradient (#040a3a → #00081e); the specks inside brighten, fade and reappear at new positions.
 
+## What's new in v1.5.1
+
+- **Fixed: the widget could get stuck in the top-left corner** — loading in a minimized window / background tab (viewport 0×0) made the viewport clamp compute a position of (8,8) and persist it; the clamp is now skipped when the viewport is 0.
+
 ## What's new in v1.5.0
 
 - **Auto step-aside when the window is resized**: after you stretch or resize the window, if the widget covers the middle conversation **text column** it moves into the **blank gap between the text column and the sidebar** — centred in that gap and placed in its **lower part** (flush with the bottom of the window; if that would cover the composer it stops 8px above it). Only when the gap is too narrow does it fall back to the sidebar column.
