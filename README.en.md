@@ -14,6 +14,17 @@ A **cost gauge** for DeepSeek Harness (`dsh`): a **resizable, expandable/collaps
 
 > In dark mode the starry skin renders the off-peak arc as a deep star-field gradient (#040a3a → #00081e); the specks inside brighten, fade and reappear at new positions.
 
+## What's new in v1.4.0
+
+| Narrow window → vertical mini |
+| --- |
+| <img src="docs/screenshot-narrow.png" width="120" alt="Vertical mini: status lamp + cost + balance + model badge"> |
+
+- **Viewport-aware vertical mini**: a `ResizeObserver` watches the viewport width; below **780px** the gauge switches to a 48px-wide **vertical mini** (top to bottom: status lamp → session cost → balance → model badge, rendered vertically) and **expands on click**. Above **860px** it leaves the mini and restores the **skin and expanded/collapsed state** you had before.
+  - **Hysteresis** (enter 780 / exit 860) prevents flicker at the threshold; after you manually expand from the mini strip it stays expanded until the window grows to 860px or more again.
+  - The window is kept **inside the viewport** on every change (so a 48px strip can never end up off-screen).
+  - Thresholds can be overridden via `localStorage` keys `dsh-cost-gauge-plus:narrowEnter` / `dsh-cost-gauge-plus:narrowExit`.
+
 ## What's new in v1.3.0 (synced with dsh-cost-gauge)
 
 | Spend records panel (English) | 花费记录面板（中文） |
