@@ -35,7 +35,7 @@ A **cost gauge** for DeepSeek Harness (`dsh`): a **resizable, expandable/collaps
   - The window is kept **inside the viewport** on every change (so a 48px strip can never end up off-screen).
   - Thresholds can be overridden via `localStorage` keys `dsh-cost-gauge-plus:narrowEnter` / `dsh-cost-gauge-plus:narrowExit`.
 
-## What's new in v1.3.0 (synced with dsh-cost-gauge)
+## What's new in v1.5.0 (synced with dsh-cost-gauge)
 
 | Spend records panel (English) | 花费记录面板（中文） |
 | --- | --- |
@@ -78,15 +78,15 @@ To install the development version or pin a tag:
 ```powershell
 irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install.ps1 -OutFile install-dsh-cost-gauge-plus.ps1
 .\install-dsh-cost-gauge-plus.ps1 -Ref main        # development (main)
-.\install-dsh-cost-gauge-plus.ps1 -Ref v1.3.0      # pin a tag
+.\install-dsh-cost-gauge-plus.ps1 -Ref v1.5.0      # pin a tag
 ```
 
 ### Manual install
 
 ```sh
 dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#main
-dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#v1.3.0
-dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/archive/refs/tags/v1.3.0.tar.gz
+dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#v1.5.0
+dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/archive/refs/tags/v1.5.0.tar.gz
 dsh plugin --profile web add link:/path/to/dsh-cost-gauge-plus
 ```
 

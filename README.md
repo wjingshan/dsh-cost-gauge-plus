@@ -37,7 +37,7 @@ DeepSeek Harness（`dsh`）的**花费仪表**：在 Web 界面**左侧靠上**�
   - 进入/退出以及视口变化时都会把浮窗**钳制在窗口内**（避免 48px 竖条停在屏幕外点不到）。
   - 阈值可覆盖：`localStorage` 的 `dsh-cost-gauge-plus:narrowEnter` / `dsh-cost-gauge-plus:narrowExit`。
 
-## 本次更新（v1.3.0，与 dsh-cost-gauge 同步）
+## 本次更新（v1.5.0，与 dsh-cost-gauge 同步）
 
 | 花费记录面板（中文） | Spend records panel (English) |
 | --- | --- |
@@ -82,7 +82,7 @@ irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install
 > ```powershell
 > irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install.ps1 -OutFile install-dsh-cost-gauge-plus.ps1
 > .\install-dsh-cost-gauge-plus.ps1 -Ref main        # 装 main 开发版
-> .\install-dsh-cost-gauge-plus.ps1 -Ref v1.3.0      # 锁指定版本
+> .\install-dsh-cost-gauge-plus.ps1 -Ref v1.5.0      # 锁指定版本
 > ```
 
 仓库尚未推送时可先用本地脚本装（`-Source` 指定本地目录）：
@@ -91,14 +91,14 @@ irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Source .\dsh-cost-gauge-plus
 ```
 
-### 手动安装（示例锁 v1.3.0，可换成任意 Release tag）
+### 手动安装（示例锁 v1.5.0，可换成任意 Release tag）
 
 ```sh
 # 从 git 安装（需要本机有 git，锁稳定版 tag）
-dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#v1.3.0
+dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#v1.5.0
 
 # 无 git 时用 tarball 直链（锁稳定版）
-dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/archive/refs/tags/v1.3.0.tar.gz
+dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/archive/refs/tags/v1.5.0.tar.gz
 
 # 想装最新开发版（main 分支）
 dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#main
