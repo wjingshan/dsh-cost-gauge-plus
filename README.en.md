@@ -14,6 +14,16 @@ A **cost gauge** for DeepSeek Harness (`dsh`): a **resizable, expandable/collaps
 
 > In dark mode the starry skin renders the off-peak arc as a deep star-field gradient (#040a3a → #00081e); the specks inside brighten, fade and reappear at new positions.
 
+## What's new in v1.5.0
+
+- **Auto step-aside when the window is resized**: after you stretch or resize the window, if the widget covers the middle conversation **text column** it moves into the **blank gap between the text column and the sidebar** — centred in that gap and placed in its **lower part** (flush with the bottom of the window; if that would cover the composer it stops 8px above it). Only when the gap is too narrow does it fall back to the sidebar column.
+  - Priority: **middle text column (never covered) > bottom composer > sidebars**; ties keep "left stays left, right stays right" with the smallest movement.
+  - Triggered only by **window resizes** (150 ms debounce); it never fights a manual drag and is skipped in the narrow strip mode.
+  - The gap fits when one side's clearance is ≥ widget width + 16px: at the default 264px that needs a window ≳1792px (middle column ≥ 1512px, sidebar expanded, right bar closed); at the minimum 200px it is about 1569px.
+- **Auto-dock when the sidebar collapses**: when DSH collapses the sidebar (or the viewport is very narrow) the narrow strip docks to the **right of the sidebar**; with the sidebar expanded it docks under the "Sessions / Workspaces" heading, and it restores the previous skin/expanded state when narrow mode ends (the dock position is never persisted).
+- Narrow strip width 48px → **36px**.
+- Internal fix: the "chat content column" used by the step-aside logic is derived from `--dsh-chat-content-width` (the centred content band inside the panel) with proper `clamp()/calc()` resolution, falling back to the composer card width and then to the whole middle panel.
+
 ## What's new in v1.4.0
 
 | Narrow window → vertical mini |
@@ -44,6 +54,8 @@ A **cost gauge** for DeepSeek Harness (`dsh`): a **resizable, expandable/collaps
 - 🕐 **12-hour clock face** — the outer ring is two-tone: **green = off-peak (standard)**, **yellow = peak (busy)** (all green at weekends); the white hand shows the current time.
 - 🛢️ **Inner odometer (balance fuel gauge)** — arc scale where full = highest balance seen, a **red segment = low-balance zone**, and the orange→green arc marks the current balance.
 - 🖐️ **Drag & resize** — drag the title bar to move, drag the bottom-right handle to scale; position and size are remembered.
+- 📱 **Viewport-aware** — at ≤ 779px the gauge switches to a **36px vertical mini** (lamp + cost + balance + model badge) and restores the previous skin/state at ≥ 860px; when DSH auto-collapses the sidebar the strip docks to its right, and with the sidebar expanded it docks under the “Sessions / Workspaces” heading.
+- 🪟 **Auto step-aside** — on window resizes, a widget covering the conversation text moves into the blank gap between the text column and the sidebar (centred, lower part); priority is text column > composer > sidebars.
 - 🔍 **Expanded / collapsed states** — expanded shows the clock plus **session cost, balance, cache-hit rate, current model** and a countdown to the next rate switch; collapsed shows **cost, balance, remaining percentage** and two status lamps (🟡 busy / 🟢 idle), each ringed by a “remaining time” pie.
 - 💰 **Session cost** — token usage priced at the official peak/off-peak rates, charged per event at the rate in force when it occurred (cache miss / cache hit / output priced separately).
   - Peak: Mon–Fri 09:00–12:00 and 14:00–18:00 Beijing time
