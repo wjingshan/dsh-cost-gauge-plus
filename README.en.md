@@ -14,6 +14,14 @@ A **cost gauge** for DeepSeek Harness (`dsh`): a **resizable, expandable/collaps
 
 > In dark mode the starry skin renders the off-peak arc as a deep star-field gradient (#040a3a → #00081e); the specks inside brighten, fade and reappear at new positions.
 
+## What's new in v1.5.2
+
+- **Daytime is dark too**: when the host UI was in **light appearance** the widget used to be white; daytime now uses a **cool blue-grey dark** (`#1b2029`), kept one step apart from the **pure black** (`#000`) used at night (flip clock, pills and text are brightened to match), with shadows and glow filters retained.
+  - Theme detection now reads what the host projects onto the DOM (`document.documentElement.style.colorScheme` and `body[data-ds-dark-theme]`), falling back to the system `prefers-color-scheme` only when neither is available (e.g. a standalone page).
+  - A `MutationObserver` follows host appearance changes, so **colours switch instantly with no page refresh**.
+  - The `Test 1` starry skin only draws its specks at **night**.
+  - Also fixes white strokes / light text in some skins that were nearly invisible on the old white background.
+
 ## What's new in v1.5.1
 
 - **Fixed: the widget could get stuck in the top-left corner** — loading in a minimized window / background tab (viewport 0×0) made the viewport clamp compute a position of (8,8) and persist it; the clamp is now skipped when the viewport is 0.
