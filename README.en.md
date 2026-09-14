@@ -14,6 +14,10 @@ A **cost gauge** for DeepSeek Harness (`dsh`): a **resizable, expandable/collaps
 
 > In dark mode the starry skin renders the off-peak arc as a deep star-field gradient (#040a3a → #00081e); the specks inside brighten, fade and reappear at new positions.
 
+## What's new in v1.5.3
+
+- **Version shown at the bottom of the settings panel**: the host returns `version` (read from `package.json`) in `/state`, and the settings panel shows `dsh-cost-gauge-plus vX.Y.Z` in 10px muted text; the row hides itself when no version is available.
+
 ## What's new in v1.5.2
 
 - **Daytime is dark too**: when the host UI was in **light appearance** the widget used to be white; daytime now uses a **cool blue-grey dark** (`#1b2029`), kept one step apart from the **pure black** (`#000`) used at night (flip clock, pills and text are brightened to match), with shadows and glow filters retained.
