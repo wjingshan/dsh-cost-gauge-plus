@@ -6,14 +6,14 @@
 
     irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install.ps1 | iex
 
-  默认安装 **main 分支**（`github:wjingshan/dsh-cost-gauge-plus#main`）。这样插件市场之后
-  才能正常提示并执行「更新」——市场判断 git 安装能不能更新，看的是 **commit 有没有变**，
-  只有分支写法会跟着走；固定 tag 会让它把同一个 tag 重装一遍，永远报「版本没有变化」。
+  默认安装 **主分支**（`github:wjingshan/dsh-cost-gauge-plus`，省略 ref）。这样插件市场之后
+  才能正常提示并执行「更新」——市场只对**省略 ref** 的写法做加速：它会先把分支 HEAD 解析成
+  固定 commit 再安装。写成显式分支名（`#main`）或固定 tag，市场都会报「版本没有变化」。
 
   想指定版本 / 来源时，先下载脚本再带参数运行：
 
     irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install.ps1 -OutFile install-dsh-cost-gauge-plus.ps1
-    .\install-dsh-cost-gauge-plus.ps1                            # 跟 main（市场可自动更新）
+    .\install-dsh-cost-gauge-plus.ps1                            # 跟主分支（市场可自动更新）
     .\install-dsh-cost-gauge-plus.ps1 -Ref v1.5.4                # 锁 tag（市场不会自动更新）
     .\install-dsh-cost-gauge-plus.ps1 -Source .\dsh-cost-gauge-plus              # 本地目录（链接方式）
     .\install-dsh-cost-gauge-plus.ps1 -Source https://github.com/wjingshan/dsh-cost-gauge-plus/archive/refs/tags/v1.5.4.tar.gz
@@ -26,7 +26,7 @@
 [CmdletBinding()]
 param(
   [string]$Profile = 'web',
-  [string]$Ref = '',            # 留空 = main（市场可自动更新）；可填分支（main）或 tag（v1.5.4，市场不会自动更新）
+  [string]$Ref = '',            # 留空 = 主分支（市场可自动更新）；填 tag（v1.5.4）等固定版本则市场不会自动更新
   [string]$Owner = 'wjingshan',
   [string]$Repo = 'dsh-cost-gauge-plus',
   [string]$Source = ''   # 可选：本地目录或任意安装源；留空则按 -Ref 用 github: 写法
@@ -59,8 +59,9 @@ function Invoke-Dsh([string[]]$Args) {
 }
 
 # 2) 解析安装来源
-#    默认跟 main：只有「分支」写法（github:owner/repo#main）插件市场才能正常更新；
-#    固定 tag 的 git 安装会让市场把同一个 tag 重装一遍，永远报「版本没有变化」。
+#    默认省略 ref：市场的加速层只对这种写法做处理——它先把分支 HEAD 解析成固定 commit 再安装，
+#    所以之后每次更新都能拿到新 commit。写成 #main 等显式 ref 会被原样交给 pnpm，而 pnpm
+#    不会重新解析锁文件里已有的同一 specifier，更新永远报「版本没有变化」。
 Write-Step "解析安装来源（$Repo → profile '$Profile'）…"
 if ($Source) {
   Write-Ok "使用指定来源：$Source"
@@ -68,10 +69,14 @@ if ($Source) {
   if (-not $Ref) { $Ref = 'main' }
   $hasGit = [bool](Get-Command git -CommandType Application -ErrorAction SilentlyContinue)
   if ($hasGit) {
-    $Source = "github:$Owner/$Repo#$Ref"
+    if ($Ref -eq 'main') {
+      $Source = "github:$Owner/$Repo"       # 省略 ref：市场可自动加速更新
+    } else {
+      $Source = "github:$Owner/$Repo#$Ref"  # 带固定 ref：市场不会自动更新
+    }
     Write-Ok "安装来源：$Source"
-    if ($Ref -match '^v?\d') {
-      Write-Warn "锁定 tag（$Ref）：插件市场无法自动更新这种安装——更新时它会把同一个 tag 重装一遍。想能自动更新请用 -Ref main。"
+    if ($Ref -ne 'main') {
+      Write-Warn "锁定 ref（$Ref）：插件市场无法自动更新这种安装——市场只对省略 ref 的写法做加速，带 ref 的会被原样交给 pnpm。想能自动更新请去掉 -Ref。"
     }
   } else {
     Write-Warn '未找到 git：github: 写法需要 git 解析分支，改用最新 Release 的 tarball 直链。'
@@ -90,7 +95,7 @@ if ($Source) {
     }
     $Source = "https://github.com/$Owner/$Repo/archive/refs/tags/$Ref.tar.gz"
     Write-Ok "安装来源：$Source"
-    Write-Warn 'tarball 装法：插件市场不会提示更新；需要更新时重新运行本脚本，或装 git 后用 -Ref main 重装。'
+    Write-Warn 'tarball 装法：插件市场不会提示更新；需要更新时重新运行本脚本，或装 git 后不带 -Ref 重装。'
   }
 }
 

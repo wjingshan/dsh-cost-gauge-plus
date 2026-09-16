@@ -100,8 +100,8 @@ irm https://raw.githubusercontent.com/wjingshan/dsh-cost-gauge-plus/main/install
 ### Manual install
 
 ```sh
-# recommended: follow the main branch — the plugin market can offer and apply updates
-dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#main
+# recommended: no ref — the plugin market can offer and apply updates
+dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus
 
 # local directory (linked; edits to lib/*.js take effect after a page refresh)
 dsh plugin --profile web add link:/path/to/dsh-cost-gauge-plus
@@ -112,8 +112,10 @@ dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/ar
 ```
 
 > ⚠️ **About the market's "Update"**: for git installs it decides by **whether the commit changed**, not by version.
-> - ✅ **To keep updates working**: install a **branch** form (`#main`, or `github:owner/repo` with no ref).
-> - ❌ **Do not install a fixed tag** (`github:owner/repo#v1.5.5`): the update command re-adds the same tag, so it always fails with "the update command completed but the version did not change" — retrying never helps; you have to change the spec by hand.
+> - ✅ **To keep updates working**: install with **no ref** (`github:owner/repo`). The market's accelerator resolves the branch HEAD to an exact commit first, so every later update moves to a new commit.
+> - ❌ **Do not write an explicit branch** (`github:owner/repo#main`): a spec carrying a ref bypasses the accelerator, and pnpm will not re-resolve it (the lockfile already holds a resolution for the same specifier), so every update fails with "the update command completed but the version did not change" (logged as `STALE(unknown)`) — retrying never helps.
+> - ❌ **Do not install a fixed tag** (`github:owner/repo#v1.5.5`): same failure — the market re-adds the same tag.
+> - ℹ️ After installing, the market may pin the spec in `package.json` to an exact commit (`...#<40-hex sha>`). That is expected: update checks skip the commit and compare the branch HEAD, and the update path strips the commit before re-resolving.
 > - A **Release tarball URL** install is never offered an update by the market (no comparable commit in the lockfile); reinstall manually to move forward.
 
 After installing, **restart** `dsh web` and refresh the page.

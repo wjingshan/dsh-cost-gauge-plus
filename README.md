@@ -111,8 +111,8 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Source .\dsh-cost-gauge-
 ### 手动安装
 
 ```sh
-# 推荐：跟 main 分支 —— 插件市场能正常提示并执行「更新」
-dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus#main
+# 推荐：省略 ref —— 插件市场能正常提示并执行「更新」
+dsh plugin --profile web add github:wjingshan/dsh-cost-gauge-plus
 
 # 从本地目录安装（链接方式，改 lib/*.js 后刷新页面即生效）
 dsh plugin --profile web add link:/path/to/dsh-cost-gauge-plus
@@ -123,8 +123,10 @@ dsh plugin --profile web add https://github.com/wjingshan/dsh-cost-gauge-plus/ar
 ```
 
 > ⚠️ **关于插件市场的「更新」**：市场判断 git 安装能不能更新，看的是 **commit 有没有变**，不是版本号。
-> - ✅ **想让市场能更新**：装**分支**写法（`#main`，或省略 ref 的 `github:owner/repo`）。
-> - ❌ **别装成固定 tag**（`github:owner/repo#v1.5.5`）：市场的更新命令会把同一个 tag 再装一遍，于是必然报「更新命令执行完成，但版本没有变化，原因未能确认」——点重试也不会成功，只能手动改 spec。
+> - ✅ **想让市场能更新**：装**省略 ref** 的写法（`github:owner/repo`）。市场的加速层会把这种写法先解析成当前分支的最新 commit，再交给 pnpm，之后每次更新都能拿到新的 commit。
+> - ❌ **别写成显式分支名**（`github:owner/repo#main`）：带 ref 的写法不经过市场的加速层，pnpm 又因为锁文件里已有同一 specifier 的解析结果而不再重新解析，于是每次更新都会报「更新命令执行完成，但版本没有变化，原因未能确认」（日志里记作 `STALE(unknown)`）——点重试也不会成功。
+> - ❌ **别装成固定 tag**（`github:owner/repo#v1.5.5`）：同上，市场会把同一个 tag 再装一遍，必然 STALE。
+> - ℹ️ 装完后 `package.json` 里可能被市场写成固定 commit（`...#<40 位 sha>`），这是正常的：检测更新时市场会跳过 commit 去比对分支 HEAD，执行更新时也会把 commit 去掉重新解析。
 > - 用 **Release tarball 直链**安装的市场**不会提示更新**（锁文件里没有可比较的 commit），需要更新时手动重装。
 
 装完**重启** `dsh web`，刷新页面即可看到左上角浮动窗。
